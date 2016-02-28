@@ -2,7 +2,7 @@ import unittest
 from RingBuffer import RingBuffer
 
 
-class MyTestCase(unittest.TestCase):
+class RingBufferTestCase(unittest.TestCase):
     def setUp(self):
         self.ringbuffer = RingBuffer(2)
 
@@ -10,34 +10,34 @@ class MyTestCase(unittest.TestCase):
         self.assertIsNotNone(self.ringbuffer)
         self.assertEquals(2, self.ringbuffer.size)
 
-    def test_add_one_item(self):
+    def test_addOneItem_SameItemReturns(self):
         self.ringbuffer.add(1)
         self.assertEquals(1, self.ringbuffer.get())
 
-    def test_add_two_items(self):
+    def test_addFullBuffer_sameOrderReturns(self):
         self.ringbuffer.add(1)
         self.ringbuffer.add(2)
         self.assertEquals(1, self.ringbuffer.get())
         self.assertEquals(2, self.ringbuffer.get())
 
-    def test_add_more_items_than_size(self):
+    def test_addOneMoreItemThanSize_FirstItemOverwritten(self):
         self.ringbuffer.add(1)
-        self.ringbuffer.add(2)
-        self.ringbuffer.add(3)
-        self.assertEquals(2, self.ringbuffer.get())
-        self.assertEquals(3, self.ringbuffer.get())
-        self.assertEquals(None, self.ringbuffer.get())
-
-    def test_first_read_then_add_full_buffer(self):
-        self.ringbuffer.add(1)
-        self.assertEquals(1, self.ringbuffer.get())
         self.ringbuffer.add(2)
         self.ringbuffer.add(3)
         self.assertEquals(2, self.ringbuffer.get())
         self.assertEquals(3, self.ringbuffer.get())
         self.assertEquals(None, self.ringbuffer.get())
 
-    def test_first_read_then_add_more_items_than_size(self):
+    def test_firstAddAndReadThenAddFullBuffer_sameOrderAsPutInAfterRead(self):
+        self.ringbuffer.add(1)
+        self.assertEquals(1, self.ringbuffer.get())
+        self.ringbuffer.add(2)
+        self.ringbuffer.add(3)
+        self.assertEquals(2, self.ringbuffer.get())
+        self.assertEquals(3, self.ringbuffer.get())
+        self.assertEquals(None, self.ringbuffer.get())
+
+    def test_firstAddAndReadThenAddOneMoreItemThanSize_SecondItemOverwritten(self):
         self.ringbuffer.add(1)
         self.assertEquals(1, self.ringbuffer.get())
         self.ringbuffer.add(2)
